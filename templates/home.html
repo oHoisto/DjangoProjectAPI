@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4 text-center">Новости</h1>
+
+    {% if news_list %}
+        {% for item in news_list %}
+            <a href="/news/{{ item.id }}/" class="news-card-link">
+                <div class="news-card">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.content|truncatechars:100 }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>Новостей пока нет.</p>
+    {% endif %}
+{% endblock %}

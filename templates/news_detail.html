@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-text {
+        text-align: left;
+    }
+
+    .detail-text p {
+        line-height: 1.7;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .detail-text h1 {
+        text-align: left;
+    }
+
+    .detail-text * {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="detail-text">
+        <h1 class="mb-4">{{ news.title }}</h1>
+        <p class="mb-4">{{ news.content }}</p>
+        <p><strong>Автор:</strong> {{ news.author }}</p>
+    </div>
+{% endblock %}

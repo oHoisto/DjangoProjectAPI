@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block body_class %}no-anim{% endblock %}
+{% block title %}Добавить новость{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .btn,
+        .news-card {
+            transition: none !important;
+        }
+        .btn:hover,
+        .news-card:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .form-control:focus {
+            box-shadow: none !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4 text-center">Добавить новость</h1>
+
+    <form method="post" class="news-card">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Заголовок</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Содержание</label>
+            <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="author" class="form-label">Автор</label>
+            <input type="text" class="form-control" id="author" name="author" required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Сохранить новость</button>
+        </div>
+    </form>
+{% endblock %}
