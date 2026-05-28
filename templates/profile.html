@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4 text-center">Профиль</h1>
+
+    <div class="news-card mx-auto mb-4" style="max-width: 700px;">
+        <p><strong>Логин:</strong> {{ user.username }}</p>
+        <p><strong>Имя:</strong> {{ user.first_name }}</p>
+        <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+
+    <h2 class="mb-3 text-center">Редактировать профиль</h2>
+
+    {% if form.errors %}
+        <div class="alert alert-danger mx-auto" style="max-width: 700px;">
+            Пожалуйста, исправьте ошибки в форме.
+        </div>
+    {% endif %}
+
+    <form method="post" class="news-card mx-auto" style="max-width: 700px;">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {{ form.first_name.errors }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {{ form.last_name.errors }}
+        </div>
+
+        <div class="mb-4">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <button type="submit" class="btn btn-success">
+                Сохранить изменения
+            </button>
+
+            <a href="{% url 'profile_delete' %}" class="btn btn-danger">
+                Удалить аккаунт
+            </a>
+        </div>
+    </form>
+{% endblock %}

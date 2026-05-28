@@ -6,15 +6,63 @@
     <h1 class="mb-4 text-center">Новости</h1>
 
     {% if news_list %}
-        {% for item in news_list %}
-            <a href="/news/{{ item.id }}/" class="news-card-link">
-                <div class="news-card">
-                    <h3>{{ item.title }}</h3>
-                    <p>{{ item.content|truncatechars:100 }}</p>
+        {% for news in news_list %}
+            <div class="news-card mb-3">
+                <a href="{% url 'news_detail' news.id %}" class="news-card-link">
+                    <h3>{{ news.title }}</h3>
+
+                    {% if news.media_file and news.is_image %}
+                        <img src="{{ news.media_file.url }}" alt="{{ news.title }}" class="img-fluid rounded mb-3">
+                    {% elif news.media_file and news.is_video %}
+                        <p class="text-muted">К новости прикреплено видео</p>
+                    {% endif %}
+
+                    <p>{{ news.summary }}</p>
+                </a>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                    <small class="text-muted">
+                        Автор:
+                        {{ news.author.first_name }} {{ news.author.last_name }}
+                    </small>
+
+                    {% if user.is_authenticated and news.author == user %}
+                        <span class="badge bg-success">Ваша новость</span>
+                    {% endif %}
                 </div>
-            </a>
+            </div>
         {% endfor %}
     {% else %}
-        <p>Новостей пока нет.</p>
+        <p class="text-center">Новостей пока нет.</p>
+    {% endif %}
+
+    {% if page_obj.has_other_pages %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            Назад
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            Вперёд
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </nav>
     {% endif %}
 {% endblock %}

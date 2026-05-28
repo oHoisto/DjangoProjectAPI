@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Удалить новость{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .news-card,
+    .news-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="news-card text-center mx-auto" style="max-width: 700px;">
+        <h1 class="mb-4">Удалить новость?</h1>
+
+        <p>Вы действительно хотите удалить новость:</p>
+
+        <h3 class="mb-4">«{{ news.title }}»</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger">
+                Да, удалить
+            </button>
+
+            <a href="{% url 'news_detail' news.id %}" class="btn btn-secondary">
+                Отмена
+            </a>
+        </form>
+    </div>
+{% endblock %}

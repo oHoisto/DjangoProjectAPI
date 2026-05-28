@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-card,
+    .news-card:hover,
+    .btn,
+    .btn:hover {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .news-card:hover {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4 text-center">{{ title }}</h1>
+
+    {% if form.errors %}
+        <div class="alert alert-danger mx-auto" style="max-width: 700px;">
+            Пожалуйста, исправьте ошибки в форме.
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="news-card mx-auto" style="max-width: 700px;">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {{ form.title.errors }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.summary.label_tag }}
+            {{ form.summary }}
+            {{ form.summary.errors }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            {{ form.content.errors }}
+        </div>
+
+        <div class="mb-4">
+            {{ form.media_file.label_tag }}
+            {{ form.media_file }}
+            {{ form.media_file.errors }}
+        </div>
+
+        <div class="d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-success">
+                {{ button_text }}
+            </button>
+
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                Отмена
+            </a>
+        </div>
+    </form>
+{% endblock %}

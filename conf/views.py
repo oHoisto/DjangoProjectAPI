@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import json
 from pathlib import Path
 from django.http import Http404
+from .forms import NewsForm
 
 
 def load_news():
@@ -23,31 +24,36 @@ def home(request):
 
 def add_news(request):
     if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
-        author = request.POST.get("author")
+        form = NewsForm(request.POST)
 
-        news_list = load_news()
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["content"]
+            author = form.cleaned_data["author"]
 
-        if news_list:
-            ids = [item["id"] for item in news_list]
-            new_id = max(ids) + 1
-        else:
-            new_id = 1
+            news_list = load_news()
 
-        new_item = {
-            "id": new_id,
-            "title": title,
-            "content": content,
-            "author": author
-        }
+            if news_list:
+                ids = [item["id"] for item in news_list]
+                new_id = max(ids) + 1
+            else:
+                new_id = 1
 
-        news_list.append(new_item)
-        save_news(news_list)
+            new_item = {
+                "id": new_id,
+                "title": title,
+                "content": content,
+                "author": author
+            }
 
-        return redirect("/")
+            news_list.append(new_item)
+            save_news(news_list)
 
-    return render(request, "add_news.html")
+            return redirect("/")
+    else:
+        form = NewsForm()
+
+    return render(request, "add_news.html", {"form": form})
 
 
 def news_detail_view(request, news_id):
@@ -58,3 +64,24 @@ def news_detail_view(request, news_id):
             return render(request, "news_detail.html", {"news": item})
 
     raise Http404("Новость не найдена")
+
+
+def delete_news(request, news_id):
+    news_list = load_news()
+
+    news_to_delete = None
+
+    for item in news_list:
+        if item["id"] == news_id:
+            news_to_delete = item
+            break
+
+    if news_to_delete is None:
+        raise Http404("Новость не найдена")
+
+    if request.method == "POST":
+        news_list.remove(news_to_delete)
+        save_news(news_list)
+        return redirect("/")
+
+    return render(request, "delete_news.html", {"news": news_to_delete})

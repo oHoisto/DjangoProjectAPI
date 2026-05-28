@@ -5,6 +5,8 @@
 {% block extra_css %}
 <style>
     .detail-text {
+        max-width: 800px;
+        margin: 0 auto;
         text-align: left;
     }
 
@@ -15,22 +17,81 @@
         word-break: break-word;
     }
 
-    .detail-text h1 {
-        text-align: left;
-    }
-
     .detail-text * {
         transition: none !important;
         animation: none !important;
         transform: none !important;
     }
+
+    .news-media {
+        max-height: 500px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div class="detail-text">
-        <h1 class="mb-4">{{ news.title }}</h1>
+    <div class="detail-text news-card">
+        <h1 class="mb-3">{{ news.title }}</h1>
+
+        {% if user.is_authenticated and news.author == user %}
+            <span class="badge bg-success mb-3">Ваша новость</span>
+        {% endif %}
+
+        {% if news.media_file %}
+            <div class="my-4">
+                {% if news.is_image %}
+                    <img src="{{ news.media_file.url }}" alt="{{ news.title }}" class="img-fluid rounded news-media">
+                {% elif news.is_video %}
+                    <video controls class="w-100 rounded">
+                        <source src="{{ news.media_file.url }}">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                {% else %}
+                    <a href="{{ news.media_file.url }}" class="btn btn-outline-light" target="_blank">
+                        Скачать файл
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <p class="text-muted mt-3">
+            <strong>Автор:</strong>
+            {{ news.author.first_name }} {{ news.author.last_name }}
+        </p>
+
+        <p class="text-muted">
+            <strong>Создано:</strong>
+            {{ news.date_created|date:"d.m.Y H:i" }}
+        </p>
+
+        <p class="text-muted">
+            <strong>Обновлено:</strong>
+            {{ news.date_updated|date:"d.m.Y H:i" }}
+        </p>
+
+        <h4 class="mt-4">Краткое описание</h4>
+        <p>{{ news.summary }}</p>
+
+        <h4 class="mt-4">Полный текст</h4>
         <p class="mb-4">{{ news.content }}</p>
-        <p><strong>Автор:</strong> {{ news.author }}</p>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                Назад
+            </a>
+
+            {% if user.is_authenticated and news.author == user %}
+                <a href="{% url 'news_edit' news.id %}" class="btn btn-warning">
+                    Редактировать
+                </a>
+
+                <a href="{% url 'news_delete' news.id %}" class="btn btn-danger">
+                    Удалить
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

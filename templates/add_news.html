@@ -23,26 +23,37 @@
 {% block content %}
     <h1 class="mb-4 text-center">Добавить новость</h1>
 
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            Пожалуйста, исправьте ошибки в форме.
+        </div>
+    {% endif %}
+
     <form method="post" class="news-card">
         {% csrf_token %}
 
         <div class="mb-3">
-            <label for="title" class="form-label">Заголовок</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {{ form.title.errors }}
         </div>
 
         <div class="mb-3">
-            <label for="content" class="form-label">Содержание</label>
-            <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            {{ form.content.errors }}
         </div>
 
         <div class="mb-4">
-            <label for="author" class="form-label">Автор</label>
-            <input type="text" class="form-control" id="author" name="author" required>
+            {{ form.author.label_tag }}
+            {{ form.author }}
+            {{ form.author.errors }}
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-success">Сохранить новость</button>
+            <button type="submit" class="btn btn-success">
+                Сохранить новость
+            </button>
         </div>
     </form>
 {% endblock %}
